@@ -1,0 +1,60 @@
+body {
+  font-family: Georgia, serif;
+  margin: 0;
+  background-color: #fafafa;
+}
+
+/* ===== Semantic Selectors ===== */
+header, footer {
+  background-color: #222;
+  color: white;
+  padding: 15px;
+}
+
+nav a {
+  color: lightblue;
+  margin-right: 10px;
+}
+
+/* ===== Pseudo Classes ===== */
+nav a:hover {
+  color: yellow;
+}
+
+/* ===== Main Layout ===== */
+main {
+  display: flex;
+  padding: 20px;
+}
+
+article {
+  flex: 3;
+  padding: 15px;
+  background-color: white;
+}
+
+aside {
+  flex: 1;
+  background-color: #eee;
+  padding: 10px;
+}
+
+/* ===== Figures ===== */
+figure {
+  text-align: center;
+}
+
+figcaption::before {
+  content: "📷 ";
+}
+
+/* ===== Media Styling ===== */
+video, audio {
+  margin-top: 15px;
+  border: 2px solid black;
+}
+
+/* ===== First Child Pseudo Class ===== */
+section p:first-child {
+  color: darkred;
+}

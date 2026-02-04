@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Advanced HTML</title>
+</head>
+<body>
+
+<details>
+  <summary>More Info</summary>
+  <p>Hidden content revealed.</p>
+</details>
+
+<dialog open>
+  <p>This is a dialog box</p>
+</dialog>
+
+<canvas id="myCanvas" width="200" height="100"></canvas>
+
+<script>
+  const c = document.getElementById("myCanvas");
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = "blue";
+  ctx.fillRect(20, 20, 150, 60);
+</script>
+
+<svg width="100" height="100">
+  <circle cx="50" cy="50" r="40" fill="red" />
+</svg>
+
+<iframe src="https://example.com" width="300" height="200"></iframe>
+
+<noscript>Your browser does not support JavaScript</noscript>
+
+</body>
+</html>

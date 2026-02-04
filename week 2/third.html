@@ -1,0 +1,75 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Semantic & Media</title>
+</head>
+<body style="margin:0; font-family:Arial, sans-serif; background:#f4f6f8;">
+
+<header style="background:#222; color:white; padding:15px;">
+  <h1 style="margin:0;">Website Header</h1>
+  <nav>
+    <a href="#" style="color:#ffd700; text-decoration:none; font-weight:bold;">Home</a> |
+    <a href="#" style="color:#ffd700; text-decoration:none; font-weight:bold;">About</a>
+  </nav>
+</header>
+
+<main style="display:flex; gap:20px; padding:20px;">
+
+  <article style="flex:3; background:white; padding:15px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+    <header>
+      <h2 style="color:#333;">Article Title</h2>
+      <time datetime="2026-01-01" style="color:gray; font-size:0.9em;">
+        Jan 1, 2026
+      </time>
+    </header>
+
+    <section>
+      <p style="color:#555; line-height:1.6;">
+        Article content goes here. This demonstrates semantic HTML elements.
+      </p>
+    </section>
+
+    <figure style="text-align:center;">
+      <img src="https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg"
+           alt="Placeholder"
+           style="border-radius:8px;">
+      <figcaption style="color:#666; font-size:0.9em;">
+        Image Caption
+      </figcaption>
+    </figure>
+  </article>
+
+  <aside style="flex:1; background:#fff3cd; padding:15px; border-radius:8px;">
+    <p><strong>Sidebar content</strong></p>
+  </aside>
+
+</main>
+
+<main style="padding:20px;">
+  <video controls style="width:300px; border-radius:8px;">
+    <source src="video.mp4" type="video/mp4">
+  </video>
+
+  <br><br>
+
+  <audio controls>
+    <source src="audio.mp3" type="audio/mpeg">
+  </audio>
+</main>
+
+<footer style="background:#222; color:white; text-align:center; padding:15px;">
+  <address>
+    Contact:
+    <a href="mailto:test@example.com" style="color:#ffd700; text-decoration:none;">
+      Email
+    </a>
+  </address>
+</footer>
+
+</body>
+</html>
+
+

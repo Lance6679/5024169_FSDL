@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Advanced HTML with Internal CSS</title>
+
+  <!-- Internal CSS -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+
+    details {
+      width: 300px;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    summary {
+      font-weight: bold;
+      color: #333;
+    }
+
+    details p {
+      color: #555;
+    }
+
+    dialog {
+      border: none;
+      border-radius: 10px;
+      padding: 20px;
+      background: #ffffff;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    button {
+      padding: 8px 15px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    canvas {
+      border: 2px solid #333;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    svg {
+      margin-top: 20px;
+      transition: transform 0.4s ease;
+    }
+
+    svg:hover {
+      transform: scale(1.1) rotate(10deg);
+    }
+
+    iframe {
+      border-radius: 10px;
+      border: 2px solid #ccc;
+      margin-top: 20px;
+    }
+
+    noscript {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Advanced HTML Elements</h2>
+
+<details>
+  <summary>More Info</summary>
+  <p>Hidden content revealed using the details tag.</p>
+</details>
+
+<button onclick="openDialog()">Open Dialog</button>
+
+<dialog id="myDialog">
+  <p>This is a dialog box</p>
+  <button onclick="closeDialog()">Close</button>
+</dialog>
+
+<canvas id="myCanvas" width="200" height="100"></canvas>
+
+<svg width="100" height="100">
+  <circle cx="50" cy="50" r="40" fill="red" />
+</svg>
+
+<iframe src="https://example.com" width="300" height="200"></iframe>
+
+<noscript>Your browser does not support JavaScript</noscript>
+
+<script>
+  // Dialog control
+  function openDialog() {
+    document.getElementById("myDialog").showModal();
+  }
+
+  function closeDialog() {
+    document.getElementById("myDialog").close();
+  }
+
+  // Canvas interaction
+  const c = document.getElementById("myCanvas");
+  const ctx = c.getContext("2d");
+
+  ctx.fillStyle = "blue";
+  ctx.fillRect(20, 20, 150, 60);
+
+  c.addEventListener("click", () => {
+    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.fillStyle = "green";
+    ctx.fillRect(30, 30, 120, 40);
+  });
+</script>
+
+</body>
+</html>

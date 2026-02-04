@@ -1,0 +1,52 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(to right, #e3f2fd, #bbdefb);
+}
+
+/* ===== Attribute Selector ===== */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+  width: 250px;
+  padding: 6px;
+  margin-top: 5px;
+}
+
+/* ===== Focus Pseudo Class ===== */
+input:focus,
+textarea:focus {
+  outline: none;
+  border: 2px solid blue;
+}
+
+/* ===== Buttons ===== */
+input[type="submit"] {
+  background-color: green;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: darkgreen;
+}
+
+input[type="reset"] {
+  background-color: red;
+  color: white;
+}
+
+/* ===== Checked Pseudo Class ===== */
+input:checked {
+  accent-color: purple;
+}
+
+/* ===== Fieldset Styling ===== */
+fieldset {
+  background-color: white;
+  border: 2px solid #444;
+}
