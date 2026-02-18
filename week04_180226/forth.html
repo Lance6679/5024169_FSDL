@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tic Tac Toe</title>
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#1e1e2f,#2c3e50);
+    color:white;
+    text-align:center;
+}
+
+h1{
+    margin-top:20px;
+}
+
+.scoreboard{
+    margin:10px;
+    font-size:18px;
+}
+
+.board-container{
+    position:relative;
+    width:330px;
+    margin:30px auto;
+}
+
+.board{
+    display:grid;
+    grid-template-columns:repeat(3,100px);
+    grid-template-rows:repeat(3,100px);
+    gap:5px;
+}
+
+.cell{
+    background:#ffffff10;
+    border:2px solid #ffffff40;
+    font-size:40px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.cell:hover{
+    background:#ffffff20;
+}
+
+.winner-cell{
+    color:#00ffcc;
+    text-shadow:0 0 10px #00ffcc;
+}
+
+.winning-line{
+    position:absolute;
+    height:6px;
+    background:#00ffcc;
+    top:0;
+    left:0;
+    transform-origin:left center;
+    width:0;
+    transition:width 0.4s ease;
+}
+
+#status{
+    font-size:20px;
+    margin-top:15px;
+}
+
+button{
+    margin-top:10px;
+    padding:8px 15px;
+    font-size:16px;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<h1>Tic Tac Toe</h1>
+
+<div class="scoreboard">
+X: <span id="xScore">0</span> |
+O: <span id="oScore">0</span>
+</div>
+
+<div class="board-container">
+    <div class="board">
+        <div class="cell" data-index="0"></div>
+        <div class="cell" data-index="1"></div>
+        <div class="cell" data-index="2"></div>
+        <div class="cell" data-index="3"></div>
+        <div class="cell" data-index="4"></div>
+        <div class="cell" data-index="5"></div>
+        <div class="cell" data-index="6"></div>
+        <div class="cell" data-index="7"></div>
+        <div class="cell" data-index="8"></div>
+    </div>
+    <div class="winning-line" id="winningLine"></div>
+</div>
+
+<div id="status">Player X's Turn</div>
+<button onclick="resetGame()">Reset</button>
+
+<script>
+let currentPlayer="X";
+let board=["","","","","","","","",""];
+let active=true;
+let xScore=0;
+let oScore=0;
+
+const cells=document.querySelectorAll(".cell");
+const statusDisplay=document.getElementById("status");
+const winningLine=document.getElementById("winningLine");
+
+const winConditions=[
+[0,1,2],[3,4,5],[6,7,8],
+[0,3,6],[1,4,7],[2,5,8],
+[0,4,8],[2,4,6]
+];
+
+cells.forEach(cell=>{
+    cell.addEventListener("click",handleClick);
+});
+
+function handleClick(e){
+    const i=e.target.dataset.index;
+    if(board[i]!==""||!active) return;
+
+    board[i]=currentPlayer;
+    e.target.textContent=currentPlayer;
+
+    checkWinner();
+}
+
+function checkWinner(){
+    for(let i=0;i<winConditions.length;i++){
+        const [a,b,c]=winConditions[i];
+
+        if(board[a] && board[a]===board[b] && board[a]===board[c]){
+            active=false;
+            highlightWinner(a,b,c);
+            drawLine(i);
+            updateScore();
+            statusDisplay.textContent="Player "+currentPlayer+" Wins!";
+            return;
+        }
+    }
+
+    if(!board.includes("")){
+        statusDisplay.textContent="It's a Draw!";
+        active=false;
+        return;
+    }
+
+    currentPlayer=currentPlayer==="X"?"O":"X";
+    statusDisplay.textContent="Player "+currentPlayer+"'s Turn";
+}
+
+function highlightWinner(a,b,c){
+    cells[a].classList.add("winner-cell");
+    cells[b].classList.add("winner-cell");
+    cells[c].classList.add("winner-cell");
+}
+
+function drawLine(index){
+    const [a,,c]=winConditions[index];
+
+    const rectA=cells[a].getBoundingClientRect();
+    const rectC=cells[c].getBoundingClientRect();
+    const boardRect=document.querySelector(".board-container").getBoundingClientRect();
+
+    const x1=rectA.left+rectA.width/2-boardRect.left;
+    const y1=rectA.top+rectA.height/2-boardRect.top;
+
+    const x2=rectC.left+rectC.width/2-boardRect.left;
+    const y2=rectC.top+rectC.height/2-boardRect.top;
+
+    const length=Math.sqrt((x2-x1)**2+(y2-y1)**2);
+    const angle=Math.atan2(y2-y1,x2-x1)*180/Math.PI;
+
+    winningLine.style.width=length+"px";
+    winningLine.style.top=y1+"px";
+    winningLine.style.left=x1+"px";
+    winningLine.style.transform=`rotate(${angle}deg)`;
+}
+
+function updateScore(){
+    if(currentPlayer==="X"){
+        xScore++;
+        document.getElementById("xScore").textContent=xScore;
+    }else{
+        oScore++;
+        document.getElementById("oScore").textContent=oScore;
+    }
+}
+
+function resetGame(){
+    board=["","","","","","","","",""];
+    active=true;
+    currentPlayer="X";
+    statusDisplay.textContent="Player X's Turn";
+    winningLine.style.width="0";
+
+    cells.forEach(cell=>{
+        cell.textContent="";
+        cell.classList.remove("winner-cell");
+    });
+}
+</script>
+
+</body>
+</html>
