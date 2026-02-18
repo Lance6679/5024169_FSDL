@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Tic Tac Toe</title>
+<title>Tic Tac Toe Ultimate</title>
 <style>
 body{
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg,#1e1e2f,#2c3e50);
+    font-family:Arial;
+    background:#111;
     color:white;
     text-align:center;
 }
 
-h1{
-    margin-top:20px;
+h1{margin-top:20px;}
+
+.controls{
+    margin:15px;
 }
 
 .scoreboard{
-    margin:10px;
-    font-size:18px;
+    margin:15px;
+    font-size:20px;
 }
 
 .board-container{
@@ -33,7 +35,7 @@ h1{
 }
 
 .cell{
-    background:#ffffff10;
+    background:#ffffff15;
     border:2px solid #ffffff40;
     font-size:40px;
     font-weight:bold;
@@ -41,16 +43,14 @@ h1{
     align-items:center;
     justify-content:center;
     cursor:pointer;
-    transition:0.3s;
+    transition:0.2s;
 }
 
-.cell:hover{
-    background:#ffffff20;
-}
+.cell:hover{transform:scale(1.05);}
 
 .winner-cell{
     color:#00ffcc;
-    text-shadow:0 0 10px #00ffcc;
+    text-shadow:0 0 15px #00ffcc;
 }
 
 .winning-line{
@@ -64,16 +64,15 @@ h1{
     transition:width 0.4s ease;
 }
 
-#status{
-    font-size:20px;
-    margin-top:15px;
+button{
+    padding:8px 14px;
+    margin:5px;
+    cursor:pointer;
 }
 
-button{
-    margin-top:10px;
-    padding:8px 15px;
-    font-size:16px;
-    cursor:pointer;
+#status{
+    margin-top:15px;
+    font-size:18px;
 }
 </style>
 </head>
@@ -81,9 +80,19 @@ button{
 
 <h1>Tic Tac Toe</h1>
 
+<div class="controls">
+    <button onclick="setMode('ai')">Play vs AI</button>
+    <button onclick="setMode('two')">2 Player Mode</button>
+</div>
+
+<div class="controls">
+    <button onclick="startGame('X')">Choose X</button>
+    <button onclick="startGame('O')">Choose O</button>
+</div>
+
 <div class="scoreboard">
-X: <span id="xScore">0</span> |
-O: <span id="oScore">0</span>
+Player X: <span id="xScore">0</span> |
+Player O: <span id="oScore">0</span>
 </div>
 
 <div class="board-container">
@@ -101,19 +110,27 @@ O: <span id="oScore">0</span>
     <div class="winning-line" id="winningLine"></div>
 </div>
 
-<div id="status">Player X's Turn</div>
-<button onclick="resetGame()">Reset</button>
+<div id="status">Select Mode & Symbol</div>
+<button onclick="resetRound()">Next Round</button>
 
 <script>
-let currentPlayer="X";
 let board=["","","","","","","","",""];
-let active=true;
+let active=false;
+
+let mode=""; // 'ai' or 'two'
+let playerSymbol="";
+let aiSymbol="";
+let currentPlayer="X";
+let startingPlayer="X";
+
 let xScore=0;
 let oScore=0;
 
 const cells=document.querySelectorAll(".cell");
 const statusDisplay=document.getElementById("status");
 const winningLine=document.getElementById("winningLine");
+const xScoreDisplay=document.getElementById("xScore");
+const oScoreDisplay=document.getElementById("oScore");
 
 const winConditions=[
 [0,1,2],[3,4,5],[6,7,8],
@@ -125,13 +142,53 @@ cells.forEach(cell=>{
     cell.addEventListener("click",handleClick);
 });
 
+function setMode(selectedMode){
+    mode=selectedMode;
+    statusDisplay.textContent="Mode: "+(mode==="ai"?"AI":"2 Players")+" | Choose X or O";
+}
+
+function startGame(symbol){
+    if(!mode){
+        alert("Select Game Mode First!");
+        return;
+    }
+
+    playerSymbol=symbol;
+    aiSymbol=symbol==="X"?"O":"X";
+
+    startingPlayer="X";
+    currentPlayer=startingPlayer;
+    active=true;
+
+    resetBoard();
+
+    statusDisplay.textContent=currentPlayer+"'s Turn";
+
+    if(mode==="ai" && currentPlayer===aiSymbol){
+        setTimeout(aiMove,400);
+    }
+}
+
 function handleClick(e){
     const i=e.target.dataset.index;
-    if(board[i]!==""||!active) return;
 
-    board[i]=currentPlayer;
-    e.target.textContent=currentPlayer;
+    if(!active || board[i]!=="" ) return;
 
+    if(mode==="ai"){
+        if(currentPlayer!==playerSymbol) return;
+        makeMove(i,playerSymbol);
+
+        if(active){
+            setTimeout(aiMove,400);
+        }
+    }else{
+        makeMove(i,currentPlayer);
+    }
+}
+
+function makeMove(i,symbol){
+    board[i]=symbol;
+    cells[i].textContent=symbol;
     checkWinner();
 }
 
@@ -143,20 +200,56 @@ function checkWinner(){
             active=false;
             highlightWinner(a,b,c);
             drawLine(i);
-            updateScore();
-            statusDisplay.textContent="Player "+currentPlayer+" Wins!";
+
+            if(board[a]==="X"){
+                xScore++;
+                xScoreDisplay.textContent=xScore;
+            }else{
+                oScore++;
+                oScoreDisplay.textContent=oScore;
+            }
+
+            statusDisplay.textContent=board[a]+" Wins!";
             return;
         }
     }
 
     if(!board.includes("")){
-        statusDisplay.textContent="It's a Draw!";
+        statusDisplay.textContent="Draw!";
         active=false;
         return;
     }
 
     currentPlayer=currentPlayer==="X"?"O":"X";
-    statusDisplay.textContent="Player "+currentPlayer+"'s Turn";
+    statusDisplay.textContent=currentPlayer+"'s Turn";
+}
+
+function aiMove(){
+    if(!active) return;
+
+    for(let condition of winConditions){
+        let [a,b,c]=condition;
+        let values=[board[a],board[b],board[c]];
+        if(values.filter(v=>v===aiSymbol).length===2 && values.includes("")){
+            let index=[a,b,c][values.indexOf("")];
+            makeMove(index,aiSymbol);
+            return;
+        }
+    }
+
+    for(let condition of winConditions){
+        let [a,b,c]=condition;
+        let values=[board[a],board[b],board[c]];
+        if(values.filter(v=>v===playerSymbol).length===2 && values.includes("")){
+            let index=[a,b,c][values.indexOf("")];
+            makeMove(index,aiSymbol);
+            return;
+        }
+    }
+
+    let empty=board.map((v,i)=>v===""?i:null).filter(v=>v!==null);
+    let move=empty[Math.floor(Math.random()*empty.length)];
+    makeMove(move,aiSymbol);
 }
 
 function highlightWinner(a,b,c){
@@ -187,27 +280,30 @@ function drawLine(index){
     winningLine.style.transform=`rotate(${angle}deg)`;
 }
 
-function updateScore(){
-    if(currentPlayer==="X"){
-        xScore++;
-        document.getElementById("xScore").textContent=xScore;
-    }else{
-        oScore++;
-        document.getElementById("oScore").textContent=oScore;
-    }
-}
-
-function resetGame(){
+function resetBoard(){
     board=["","","","","","","","",""];
-    active=true;
-    currentPlayer="X";
-    statusDisplay.textContent="Player X's Turn";
     winningLine.style.width="0";
 
     cells.forEach(cell=>{
         cell.textContent="";
         cell.classList.remove("winner-cell");
     });
+}
+
+function resetRound(){
+    if(!mode) return;
+
+    resetBoard();
+    active=true;
+
+    startingPlayer=startingPlayer==="X"?"O":"X";
+    currentPlayer=startingPlayer;
+
+    statusDisplay.textContent=currentPlayer+"'s Turn";
+
+    if(mode==="ai" && currentPlayer===aiSymbol){
+        setTimeout(aiMove,400);
+    }
 }
 </script>
 
